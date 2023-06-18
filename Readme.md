@@ -1,4 +1,4 @@
-Sure! Here's a sample README file that provides an overview of the deployments and services for MongoDB and the web application:
+README file that provides an overview of the deployments and services for MongoDB and the web application:
 
 # README
 
