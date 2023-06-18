@@ -1,0 +1,2 @@
+To get node
+kubectl get nodes

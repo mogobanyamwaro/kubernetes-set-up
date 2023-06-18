@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  # Labels are additional identifiers of the components in additon to the name. For Pods, the labels are used to identify the pods that are part of a service and required for the service to function.
+  labels:
+    app: mongo
+    # Specification of the deployment
+spec:
+  replicas: 1
+  selector:
+    # The selector is used to identify the pods that are part of the deployment
+    matchLabels:
+      app: mongo
+      # This is the blueprint for the pods that will be created within the configuration of the deployment
+  template:
+    metadata:
+      labels:
+        app: mongo
+        # Specification of the containers that will be created within the pods
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:5.0
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-user
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # Endpoint is the IP address and port of the service
+  name: mongo-service
+spec:
+  selector:
+    app: mongo
+  ports:
+    - port: 27017
+      protocol: TCP
+      targetPort: 27017
